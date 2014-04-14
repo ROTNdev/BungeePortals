@@ -21,7 +21,7 @@ import com.fuzzoland.BungeePortals.Tasks.SaveTask;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
-public class BungeePortals extends JavaPlugin{
+public class BungeePortals extends JavaPlugin {
 
 	private Logger logger = Bukkit.getLogger();
 	public Map<String, String> portalData = new HashMap<String, String>();
@@ -29,7 +29,7 @@ public class BungeePortals extends JavaPlugin{
 	public YamlConfiguration configFile = null;
 	public YamlConfiguration portalsFile = null;
 
-	public void onEnable(){
+	public void onEnable() {
 		Long time = System.currentTimeMillis();
 		if(getServer().getPluginManager().getPlugin("WorldEdit") == null){
 			getPluginLoader().disablePlugin(this);
@@ -51,24 +51,24 @@ public class BungeePortals extends JavaPlugin{
 		this.logger.log(Level.INFO, "[BungeePortals] Version " + getDescription().getVersion() + " has been enabled. (" + (System.currentTimeMillis() - time) + "ms)");
 	}
 	
-	public void onDisable(){
+	public void onDisable() {
 		Long time = System.currentTimeMillis();
 		savePortalsData();
 		this.logger.log(Level.INFO, "[BungeePortals] Version " + getDescription().getVersion() + " has been disabled. (" + (System.currentTimeMillis() - time) + "ms)");
 	}
 	
-	private void startMetrics(){
+	private void startMetrics() {
 		try{
 			MetricsLite metrics = new MetricsLite(this);
 			metrics.start();
 			this.logger.log(Level.INFO, "[BungeePortals] Metrics initiated!");
-		}catch(IOException e){
+		}catch(IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	private void createConfigurationFile(InputStream in, File file){
-		try{
+	private void createConfigurationFile(InputStream in, File file) {
+		try {
 			OutputStream out = new FileOutputStream(file);
 			byte[] buf = new byte[1024];
 			int len;
@@ -77,14 +77,14 @@ public class BungeePortals extends JavaPlugin{
 			}
 			out.close();
 			in.close();
-		}catch(IOException e){
+		} catch(IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void loadConfigurationFiles(){
+	public void loadConfigurationFiles() {
 		File configFile = new File(getDataFolder(), "config.yml");
-		if(!configFile.exists()){
+		if(!configFile.exists()) {
 			configFile.getParentFile().mkdirs();
 			createConfigurationFile(getResource("config.yml"), configFile);
 			this.logger.log(Level.INFO, "[BungeePortals] Configuration file config.yml created!");
@@ -92,7 +92,7 @@ public class BungeePortals extends JavaPlugin{
 		this.configFile = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "config.yml"));
 		this.logger.log(Level.INFO, "[BungeePortals] Configuration file config.yml loaded!");
 		File portalsFile = new File(getDataFolder(), "portals.yml");
-		if(!portalsFile.exists()){
+		if(!portalsFile.exists()) {
 			portalsFile.getParentFile().mkdirs();
 			createConfigurationFile(getResource("portals.yml"), portalsFile);
 			this.logger.log(Level.INFO, "[BungeePortals] Configuration file portals.yml created!");
@@ -101,25 +101,25 @@ public class BungeePortals extends JavaPlugin{
 		this.logger.log(Level.INFO, "[BungeePortals] Configuration file portals.yml loaded!");
 	}
 	
-	public void loadPortalsData(){
-		try{
+	public void loadPortalsData() {
+		try {
 			Long time = System.currentTimeMillis();
 			for(String key : this.portalsFile.getKeys(false)){
 	    	    String value = this.portalsFile.getString(key);
 	    	    this.portalData.put(key, value);
 	    	}
 			this.logger.log(Level.INFO, "[BungeePortals] Portal data loaded! (" + (System.currentTimeMillis() - time) + "ms)");
-	    }catch(NullPointerException e){ }
+	    } catch(NullPointerException e) { }
 	}
 	
-	public void savePortalsData(){
+	public void savePortalsData() {
 		Long time = System.currentTimeMillis();
 		for(Entry<String, String> entry : this.portalData.entrySet()){
 			this.portalsFile.set(entry.getKey(), entry.getValue());
 		}
-		try{
+		try {
 			this.portalsFile.save(new File(getDataFolder(), "portals.yml"));
-		}catch(IOException e){
+		} catch(IOException e) {
 			e.printStackTrace();
 		}
 		this.logger.log(Level.INFO, "[BungeePortals] Portal data saved! (" + (System.currentTimeMillis() - time) + "ms)");
